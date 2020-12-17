@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MoviesList</string>
+    <string name="Search_view_hint">Поиск по названию фильтма</string>
+</resources>
