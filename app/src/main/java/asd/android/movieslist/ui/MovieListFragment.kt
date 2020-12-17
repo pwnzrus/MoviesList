@@ -1,12 +1,13 @@
 package asd.android.movieslist.ui
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.Toast
@@ -30,6 +31,7 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener{
     private var favoriteList = mutableListOf<Int>()
     private var screenStatus: ScreenStatus = ScreenStatus()
     private lateinit var searchView: SearchView
+    private var querySearch:String =""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,18 +78,28 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener{
             onLayoutRefresh()
         }
 
-        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.searchMovies(query?:"")
-                Toast.makeText(requireContext(),query,Toast.LENGTH_SHORT).show()
+//                viewModel.searchMovies(query ?: "")
+//                Toast.makeText(requireContext(), query, Toast.LENGTH_SHORT).show()
+//                val imm: InputMethodManager =
+//                    activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+//
+//                imm.hideSoftInputFromWindow(view?.windowToken,0)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+            querySearch = newText?:""
+                if (newText?.isEmpty()?:false){
+                    viewModel.loadMovies()
+                }else{
+                    viewModel.searchMovies(newText ?: "")
+                }
+                return true
             }
 
-        } )
+        })
     }
 
     private fun initViewModel() {
@@ -150,12 +162,15 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener{
             favoriteList.add(int)
             viewModel.updateFavoriteList(favoriteList)
         }
-        Log.d("test",(screenStatus == ScreenStatus(LoadStatus.NORMAL)).toString())
+        Log.d("test", (screenStatus == ScreenStatus(LoadStatus.NORMAL)).toString())
 
     }
 
     fun onLayoutRefresh() {
-        viewModel.loadMovies()
+        if (querySearch.isEmpty()){
+        viewModel.loadMovies()}
+        else
+            viewModel.searchMovies(querySearch)
     }
 
 
