@@ -1,4 +1,4 @@
-package asd.android.movieslist.ui
+package asd.android.movieslist.ui.movie_list
 
 import android.util.Log
 import android.view.LayoutInflater

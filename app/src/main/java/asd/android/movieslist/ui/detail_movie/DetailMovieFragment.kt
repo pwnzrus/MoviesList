@@ -1,4 +1,4 @@
-package asd.android.movieslist.ui
+package asd.android.movieslist.ui.detail_movie
 
 import androidx.fragment.app.Fragment
 

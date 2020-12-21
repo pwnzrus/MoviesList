@@ -1,4 +1,4 @@
-package asd.android.movieslist.ui
+package asd.android.movieslist.ui.movie_list
 
 import android.annotation.SuppressLint
 import android.app.Application
@@ -6,14 +6,15 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import asd.android.movieslist.services.LoadStatus
 import asd.android.movieslist.services.ScreenStatus
+import asd.android.movieslist.services.database.FavoriteMovie
 import asd.android.movieslist.services.dto.Movie
-import asd.android.movieslist.services.favorits.FavoriteMovie
 import asd.android.movieslist.services.repo.DatabaseRepository
 import asd.android.movieslist.services.repo.NetworkRepository
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 
 class MovieListViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,7 +24,9 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
 
     var movies: MutableLiveData<List<Movie>> = MutableLiveData()
     var status: MutableLiveData<ScreenStatus> = MutableLiveData()
+
     var favoriteMovieIDs: MutableLiveData<MutableList<Int>> = MutableLiveData<MutableList<Int>>()
+
     private var favoriteMovies = databaseRepository.getFavoriteList()
 
 
@@ -43,19 +46,19 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
         } as MutableLiveData<MutableList<Int>>
     }
 
-    fun updateFavoriteList(favoriteList: MutableList<Int>) {
-        val favoriteMovieList = mutableListOf<FavoriteMovie>()
+    fun updateFavoriteList(id:Int) {
+        favoriteMovies.value?.add(FavoriteMovie(id))
 
-        for (i in favoriteList) {
-            favoriteMovieList.add(FavoriteMovie(i))
+        favoriteMovies.value?.let {
+            databaseRepository.updateFavoriteList(it)
         }
-
-        databaseRepository.updateFavoriteList(favoriteMovieList)
-
 
 
 
     }
+
+
+
 
 
     @SuppressLint("CheckResult")
@@ -63,14 +66,14 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
         repository.getAllMovies()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { status.setValue(ScreenStatus(LoadStatus.LOADING)) }
+            .doOnSubscribe { status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.LOADING)) }
             .subscribe({
                 movies.value = it.results
-                status.setValue(ScreenStatus(LoadStatus.NORMAL))
+                status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.NORMAL))
             },
                 {
                     Log.d("test1", it.toString())
-                    status.setValue(ScreenStatus(LoadStatus.ERROR))
+                    status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.ERROR))
                 }
             )
 
@@ -84,14 +87,14 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
         repository.searchMovies(query)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { status.setValue(ScreenStatus(LoadStatus.LOADING)) }
+            .doOnSubscribe { status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.LOADING)) }
             .subscribe({
                 movies.value = it.results
-                status.setValue(ScreenStatus(LoadStatus.NORMAL))
+                status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.NORMAL))
             },
                 {
                     Log.d("test1", it.toString())
-                    status.setValue(ScreenStatus(LoadStatus.ERROR))
+                    status.setValue(ScreenStatus(ScreenStatus.CurrentStatus.ERROR))
                 }
             )
 

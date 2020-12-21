@@ -1,10 +1,10 @@
-package asd.android.movieslist.services.favorits
+package asd.android.movieslist.services.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-interface DatabaseDTO {
+public interface DatabaseDTO {
     @Query("SELECT * FROM FavoriteMovie")
     fun getFavoriteList():LiveData<MutableList<FavoriteMovie>>
 
