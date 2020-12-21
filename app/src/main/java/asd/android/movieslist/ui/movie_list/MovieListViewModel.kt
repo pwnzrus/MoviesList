@@ -14,10 +14,12 @@ import asd.android.movieslist.services.repo.NetworkRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
-class MovieListViewModel(application: Application) : AndroidViewModel(application) {
+class MovieListViewModel(application: Application,val publishSubject: PublishSubject<String>) : AndroidViewModel(application) {
 
     private val repository = NetworkRepository()
     private val databaseRepository = DatabaseRepository(application.baseContext)
@@ -34,6 +36,7 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
     init {
         loadMovies()
         getFavoriteMovies()
+        subscribeOnSubject()
     }
 
     private fun getFavoriteMovies() {
@@ -57,7 +60,18 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
 
     }
 
+    fun subscribeOnSubject(){
+        publishSubject.debounce(500,TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            if (it.isEmpty()){
+                loadMovies()
+            }else{
+                searchMovies(it)
+            }
+        }
 
+
+
+    }
 
 
 

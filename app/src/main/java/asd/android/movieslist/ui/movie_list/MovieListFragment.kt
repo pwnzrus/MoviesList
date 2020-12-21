@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.PublishSubject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -37,6 +38,7 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener {
     private var querySearch: String = ""
     private lateinit var refreshButton: FloatingActionButton
     private lateinit var errorStateTextView: TextView
+    private val publishSubject = PublishSubject.create<String>()
 
 
     override fun onCreateView(
@@ -75,26 +77,19 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener {
             onLayoutRefresh()
         }
 
-        Observable.create<String> { observableEmitter ->
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    observableEmitter.onNext(newText ?: "")
+                    querySearch = newText?:""
+                    publishSubject.onNext(newText?:"")
+
                     return true
                 }
             }
             )
-        }.debounce(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            if (it.isEmpty()) {
-                viewModel.loadMovies()
-            } else {
-                querySearch = it
-                viewModel.searchMovies(it)
-            }
-        }
 
         refreshButton.setOnClickListener { viewModel.loadMovies() }
     }
@@ -104,7 +99,7 @@ class MovieListFragment : Fragment(), RecyclerClickItemListener {
 
         viewModel = ViewModelProvider(
             this,
-            MovieListViewModelFactory(requireActivity().application)
+            MovieListViewModelFactory(requireActivity().application,publishSubject)
         ).get(MovieListViewModel::class.java)
 
         viewModel.movies.observe(this) {
