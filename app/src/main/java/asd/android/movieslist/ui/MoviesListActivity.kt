@@ -2,7 +2,6 @@ package asd.android.movieslist.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.SearchView
@@ -22,18 +21,19 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MovieListAdapter
     private lateinit var viewModel: MovieListViewModel
-    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBarHorizontal: ProgressBar
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var searchView: SearchView
     private lateinit var refreshButton: FloatingActionButton
     private lateinit var errorTextView: TextView
     private val publishSubject = PublishSubject.create<String>()
     private var favoritesList = mutableListOf<Int>()
+    private lateinit var progressBar: ProgressBar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.movies_list_fragment)
+        setContentView(R.layout.movies_list_activity)
         initView()
         initViewModel()
         initListeners()
@@ -45,11 +45,12 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
         recyclerViewAdapter = MovieListAdapter(emptyList(), favoritesList, this).also {
             recyclerView.adapter = it
         }
-        progressBar = findViewById(R.id.movies_list_progress_bar)
+        progressBarHorizontal = findViewById(R.id.movies_list_progress_bar_horizontal)
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout)
         searchView = findViewById(R.id.movies_list_searchView)
         refreshButton = findViewById(R.id.movies_list_refresh_fab)
         errorTextView = findViewById(R.id.movies_list_error_text_view)
+        progressBar = findViewById(R.id.progressBar)
     }
 
     private fun initViewModel() {
@@ -109,6 +110,7 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
     }
 
     private fun doOnErrorState(errorText: String) {
+        progressBarHorizontal.visibility = View.GONE
         progressBar.visibility = View.GONE
 
         //Если во вьюМодели даже не инициализировались фильмы, то будет отображен экран ошибки с кнопкой обновить.Например первый запуск без инета
@@ -121,11 +123,18 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
     }
 
     private fun doOnLoadingState() {
-        progressBar.visibility = View.VISIBLE
+
         showErrorView(false)
+        if (viewModel.movies.value?.isEmpty()?:true){
+            progressBar.visibility = View.VISIBLE
+            return
+        }
+        progressBarHorizontal.visibility = View.VISIBLE
+
     }
 
     private fun doOnNormalState() {
+        progressBarHorizontal.visibility = View.GONE
         progressBar.visibility = View.GONE
         showErrorView(false)
     }
@@ -136,7 +145,7 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
         // затем список обновится через лайвдату и обновит представления
         if (int in favoritesList) {
             viewModel.delete(int)
-            
+
             //Если айди фильма в списке отсутстствует, то его туда добавляем и обновляем данные в бд
         } else if (int !in favoritesList) {
             viewModel.updateFavoriteList(int)
@@ -155,6 +164,8 @@ class MoviesListActivity : AppCompatActivity(), RecyclerClickItemListener {
     }
 
     private fun doOnEmptySearchResult() {
+        progressBar.visibility = View.GONE
+        progressBarHorizontal.visibility = View.GONE
         doOnErrorState("По вашему запросу \"${viewModel.searchQuery}\" ничего не найдено")
     }
 }
