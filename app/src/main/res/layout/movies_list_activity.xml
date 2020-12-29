@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,16 +13,16 @@
         android:background="#673AB7">
 
         <SearchView
-            android:id="@+id/searchView"
+            android:queryHint="@string/search_view_hint"
+            android:id="@+id/movies_list_searchView"
             style="@style/Widget.AppCompat.Light.SearchView"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:fadeScrollbars="false"
             android:focusable="false"
             android:iconifiedByDefault="false"
             android:queryBackground="@color/cardview_light_background"
-            android:tooltipText="@string/Search_view_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,48 +32,58 @@
             android:id="@+id/movies_list_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchView"
+            app:layout_constraintTop_toBottomOf="@id/movies_list_progress_bar_horizontal"
             app:layout_constraintVertical_bias="0.0" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/movies_list_progress_bar_horizontal"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/movies_list_rv"
+            android:progressTint="#F8F8F8"
+            app:layout_constraintBottom_toTopOf="@+id/movies_list_rv"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            />
+            app:layout_constraintTop_toBottomOf="@id/movies_list_searchView"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/errorTextView"
+            android:id="@+id/movies_list_error_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="392dp"
             android:minLines="2"
-            android:text="Нам не удалось обработать ваш запрос. Попробуйте позже."
+            android:text="@string/errorText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/refresh_btn"
+            android:id="@+id/movies_list_refresh_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="92dp"
-            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_menu_rotate" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/movies_list_rv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/movies_list_searchView" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

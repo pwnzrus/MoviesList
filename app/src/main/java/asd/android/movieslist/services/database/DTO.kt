@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-public interface DatabaseDTO {
+interface DTO {
     @Query("SELECT * FROM FavoriteMovie")
-    fun getFavoriteList():LiveData<MutableList<FavoriteMovie>>
+    fun getFavoriteList(): LiveData<MutableList<FavoriteMovie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun updateFavoriteList(favoriteMovie:MutableList<FavoriteMovie>)
+    fun updateFavoriteList(favoriteMovie: MutableList<FavoriteMovie>)
 
     @Delete
-    fun delete(favoriteMovie:FavoriteMovie)
+    fun delete(favoriteMovie: FavoriteMovie)
 
 }
