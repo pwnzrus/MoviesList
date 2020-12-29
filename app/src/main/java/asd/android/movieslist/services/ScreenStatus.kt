@@ -4,6 +4,7 @@ class ScreenStatus(var loadStatus:CurrentStatus = CurrentStatus.NORMAL){
     enum class CurrentStatus {
         LOADING,
         NORMAL,
-        ERROR
+        ERROR,
+        EMPTY_STATE
     }
 }

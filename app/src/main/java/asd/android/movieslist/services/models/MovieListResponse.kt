@@ -1,4 +1,4 @@
-package asd.android.movieslist.services.dto
+package asd.android.movieslist.services.models
 
 import com.google.gson.annotations.SerializedName
 

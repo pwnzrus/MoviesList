@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoviesList">
-        <activity android:name=".ui.HostFragmentActivity">
+        <activity android:name=".ui.MoviesListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

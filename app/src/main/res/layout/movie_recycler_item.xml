@@ -16,7 +16,7 @@
             android:layout_margin="4dp">
 
             <ImageView
-                android:id="@+id/movie_poster_iv"
+                android:id="@+id/movie_recycler_item_poster_iv"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -29,46 +29,46 @@
             </ImageView>
 
             <TextView
-                android:id="@+id/movie_title_tv"
+                android:id="@+id/movie_recycler_item_title_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:maxLines="2"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/favorites_iv"
+                app:layout_constraintEnd_toStartOf="@+id/movie_recycler_item_favorites_iv"
                 app:layout_constraintHorizontal_bias="0.044"
-                app:layout_constraintStart_toEndOf="@+id/movie_poster_iv"
+                app:layout_constraintStart_toEndOf="@+id/movie_recycler_item_poster_iv"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.095"
                 tools:text="test text" />
 
             <TextView
-                android:id="@+id/movie_description_tv"
+                android:id="@+id/movie_recycler_item_description_tv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:ellipsize="end"
-                app:layout_constraintBottom_toTopOf="@+id/movie_date_tv"
-                app:layout_constraintEnd_toStartOf="@+id/favorites_iv"
+                app:layout_constraintBottom_toTopOf="@+id/movie_recycler_item_date_tv"
+                app:layout_constraintEnd_toStartOf="@+id/movie_recycler_item_favorites_iv"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/movie_title_tv"
-                app:layout_constraintTop_toBottomOf="@+id/movie_title_tv"
+                app:layout_constraintStart_toStartOf="@+id/movie_recycler_item_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/movie_recycler_item_title_tv"
                 app:layout_constraintVertical_bias="0.013"
                 tools:text="test text" />
 
             <TextView
-                android:id="@+id/movie_date_tv"
+                android:id="@+id/movie_recycler_item_date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 tools:text="test text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/movie_description_tv" />
+                app:layout_constraintStart_toStartOf="@+id/movie_recycler_item_description_tv" />
 
             <ImageView
-                android:id="@+id/favorites_iv"
+                android:id="@+id/movie_recycler_item_favorites_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
